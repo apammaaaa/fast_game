@@ -1,6 +1,9 @@
 import sys
+import pygame
+from collections import defaultdict
+from gamescene import Scene
+import pickle
 
-from gamescene import *
 
 
 class Game:
@@ -14,28 +17,29 @@ class Game:
         """
         pygame.init()
         self.size = size
-        self.main_scene = Scene('default_scene', size)
+        self.main_scene = Scene('default_scene', size, (255, 255, 255))
         self.scene_dict = defaultdict()
         pygame.display.set_caption(title)
         if icon_path:
             img = pygame.image.load(icon_path)
             pygame.display.set_icon(img)
 
-    def create_scene(self, scene_name):
-        self.scene_dict[scene_name] = Scene(scene_name, self.size)
+    def create_scene(self, scene_name, bg_color: tuple[int, int, int] = (255, 255, 255)):
+        self.scene_dict[scene_name] = Scene(scene_name, self.size, bg_color)
 
     def load_scene(self, scene_name):
         self.main_scene = self.scene_dict[scene_name]
 
     def run(self):
         while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
             self.main_scene.fill()
             pygame.display.update()
 
     def __getitem__(self, key) -> Scene:
         return self.scene_dict[key]
+
+    def save_scene(self, scene_name):
+        with open('scene/game_object_name', 'wb') as fp:
+            pickle.dump(self.scene_dict[scene_name], fp)
 
 
