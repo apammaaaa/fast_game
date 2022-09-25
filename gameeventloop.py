@@ -2,32 +2,34 @@ import pygame
 import sys
 from collections import defaultdict
 
+
+def hotkey_bind(e, event, func):
+    # print(e['hot_key'])
+    if e['hot_key']:
+        if e['hot_key'] == 'a':
+            if event.key == pygame.K_a:
+                func(e['meta'])
+        elif e['hot_key'] == 'b':
+            if event.key == pygame.K_b:
+                func(e['meta'])
+        elif e['hot_key'] == 'c':
+            if event.key == pygame.K_c:
+                func(e['meta'])
+        elif e['hot_key'] == 'd':
+            if event.key == pygame.K_d:
+                func(e['meta'])
+        elif e['hot_key'] == 'e':
+            if event.key == pygame.K_e:
+                func(e['meta'])
+        elif e['hot_key'] == 'f':
+            if event.key == pygame.K_f:
+                func(e['meta'])
+
+
 class EventController:
 
     def __init__(self):
         self.event_ls = []
-
-    def hotkey_bind(self, e, event, func):
-        # print(e['hot_key'])
-        if e['hot_key']:
-            if e['hot_key'] == 'a':
-                if event.key == pygame.K_a:
-                    func(e['meta'])
-            elif e['hot_key'] == 'b':
-                if event.key == pygame.K_b:
-                    func(e['meta'])
-            elif e['hot_key'] == 'c':
-                if event.key == pygame.K_c:
-                    func(e['meta'])
-            elif e['hot_key'] == 'd':
-                if event.key == pygame.K_d:
-                    func(e['meta'])
-            elif e['hot_key'] == 'e':
-                if event.key == pygame.K_e:
-                    func(e['meta'])
-            elif e['hot_key'] == 'f':
-                if event.key == pygame.K_f:
-                    func(e['meta'])
 
     def listen(self, event):
         # print(self.event_ls)
@@ -37,14 +39,29 @@ class EventController:
             event_type, func, hot_key = e['event_type'], e['func'], e['hot_key']
             if event_type == 'KEYDOWN':
                 if event.type == pygame.KEYDOWN:
-                    self.hotkey_bind(e, event, func)
+                    hotkey_bind(e, event, func)
             elif event_type == 'KEYUP':
                 if event.type == pygame.KEYUP:
-                    self.hotkey_bind(e, event, func)
+                    hotkey_bind(e, event, func)
 
             elif event_type == 'MOUSEBUTTONDOWN':
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    func(e['meta'])
+                    if e['meta'].get('gobj', None):
+                        if e['meta']['gobj'].type == 'button':
+                            if e['meta']['gobj'].rect.collidepoint(event.pos):
+                                func(e['meta'])
+                    else:
+                        func(e['meta'])
+            elif event_type == 'MOUSEMOTION':
+
+                if event.type == pygame.MOUSEMOTION:
+                    if e['meta'].get('gobj', None):
+                        if e['meta']['gobj'].type == 'button':
+                            if e['meta']['gobj'].rect.collidepoint(event.pos):
+                                e['meta'].update({'is_hover': 1})
+                            else:
+                                e['meta'].update({'is_hover': 0})
+                            func(e['meta'])
 
     def bind(self, event_type, func, hot_key, meta):
         self.event_ls.append({'event_type':event_type, 'func': func, 'hot_key': hot_key, 'meta': meta})

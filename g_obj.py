@@ -1,4 +1,5 @@
 from gametools import GameFun
+from gameeventloop import EventController, UpdateController
 import pygame
 
 class Rect:
@@ -44,7 +45,17 @@ class Font:
 
 class Button:
 
-    def __init__(self, text: str, font_size: int, color: tuple[int, int, int], position_for_obj: tuple[int, int], bg_color: tuple[int, int, int], event_controller, update_controller):
+    def __init__(self,
+                 text: str,
+                 font_size: int,
+                 color: tuple[int, int, int],
+                 position_for_obj: tuple[int, int],
+                 bg_color: tuple[int, int, int],
+                 event_controller: EventController,
+                 update_controller: UpdateController,
+                 hover_color: tuple[int, int, int],
+                 hover_bg_color: tuple[int, int, int],
+                 font_style: str):
         """
         文本对象
         :param text: 文本内容
@@ -53,13 +64,27 @@ class Button:
         """
         self.type = 'button'
         self.font_size = font_size
-        self.text = text
+        self.txt = text
         self.color = color
         self.position_for_obj = position_for_obj
         self.bg_color = bg_color
-        f = pygame.font.Font('C:/Windows/Fonts/RAVIE.TTF', self.font_size)
-        self.text = f.render(self.text, True, self.color, self.bg_color)
+        self.f = pygame.font.Font(font_style, self.font_size)
+        self.text = self.f.render(self.txt, True, self.color, self.bg_color)
         self.rect = self.text.get_rect()
 
         self.event_controller = event_controller
         self.update_controller = update_controller
+
+        self.hover_color = hover_color
+        self.hover_bg_color = hover_bg_color
+
+        self.event_controller.bind('MOUSEMOTION', self.mouse_hover, None, {'gobj':self, 'is_hover':0})
+
+    def mouse_hover(self, meta):
+        if meta['is_hover'] == 1:
+            self.text = self.f.render(self.txt, True, self.hover_color, self.hover_bg_color)
+        else:
+            self.text = self.f.render(self.txt, True, self.color, self.bg_color)
+
+    def bind(self, func):
+        self.event_controller.bind('MOUSEBUTTONDOWN', func, meta={'gobj':self}, hot_key=None)
