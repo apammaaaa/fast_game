@@ -2,13 +2,12 @@ import sys
 import pygame
 from collections import defaultdict
 from gamescene import Scene
-import pickle
 
 
 
 class Game:
 
-    def __init__(self, title: str, size: tuple[int, int], icon_path: str = None):
+    def __init__(self, title: str, size: tuple[int, int], icon_path: str = None, fps=60):
         """
         初始化
         :param size: 窗口大小
@@ -24,6 +23,8 @@ class Game:
             img = pygame.image.load(icon_path)
             pygame.display.set_icon(img)
 
+        self.fps = fps
+
     def create_scene(self, scene_name, bg_color: tuple[int, int, int] = (255, 255, 255)):
         self.scene_dict[scene_name] = Scene(scene_name, self.size, bg_color)
 
@@ -31,15 +32,15 @@ class Game:
         self.main_scene = self.scene_dict[scene_name]
 
     def run(self):
+
+        fps_clock = pygame.time.Clock()
         while True:
             self.main_scene.fill()
-            pygame.display.update()
+
+            pygame.display.flip()
+            fps_clock.tick(self.fps)
 
     def __getitem__(self, key) -> Scene:
         return self.scene_dict[key]
-
-    def save_scene(self, scene_name):
-        with open('scene/game_object_name', 'wb') as fp:
-            pickle.dump(self.scene_dict[scene_name], fp)
 
 

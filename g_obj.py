@@ -1,9 +1,9 @@
 from gametools import GameFun
 import pygame
 
-class Rect():
+class Rect:
 
-    def __init__(self, img_path: str, size: tuple[int, int], position_for_obj: tuple[int, int], event_controller):
+    def __init__(self, img_path: str, size: tuple[int, int], position_for_obj: tuple[int, int], event_controller, update_controller):
         """
         方块对象
         :param img_path: 图片路径
@@ -17,10 +17,13 @@ class Rect():
             self.image = pygame.transform.scale(self.image, self.size)
         self.rect = self.image.get_rect()
 
+        self.event_controller = event_controller
+        self.update_controller = update_controller
 
-class Font():
 
-    def __init__(self, text: str, font_size: int,  color: tuple[int, int, int], position_for_obj: tuple[int, int], event_controller):
+class Font:
+
+    def __init__(self, text: str, font_size: int,  color: tuple[int, int, int], position_for_obj: tuple[int, int], event_controller, update_controller):
         """
         文本对象
         :param text: 文本内容
@@ -37,10 +40,11 @@ class Font():
         self.rect = self.text.get_rect()
 
         self.event_controller = event_controller
+        self.update_controller = update_controller
 
-class Button():
+class Button:
 
-    def __init__(self, text: str, font_size: int, color: tuple[int, int, int], position_for_obj: tuple[int, int], bg_color: tuple[int, int, int], event_controller):
+    def __init__(self, text: str, font_size: int, color: tuple[int, int, int], position_for_obj: tuple[int, int], bg_color: tuple[int, int, int], event_controller, update_controller):
         """
         文本对象
         :param text: 文本内容
@@ -58,3 +62,4 @@ class Button():
         self.rect = self.text.get_rect()
 
         self.event_controller = event_controller
+        self.update_controller = update_controller
