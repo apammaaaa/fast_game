@@ -34,6 +34,11 @@ class AnimationController:
                                       anime_name_path=anime_name_path, anime_number_range=anime_number_range, anime_name=anime_name)
 
     def play_anime(self, gobj_name, anime_name):
+        '''
+        启用动画
+        :param gobj_name: 对象名称
+        :param anime_name: 动画名称
+        '''
         self.g_obj[gobj_name].anime_dict[anime_name]['is_active'] = 1
 
     def __getitem__(self, key):
@@ -64,5 +69,5 @@ class CharacterController:
         self.g_obj = g_obj
         self.g_obj.character_dict = defaultdict()
 
-    def bind_event(self, action_name, action_value, func):
-        self.update_controller.bind_u('character_event', action_name=action_name, action_value=action_value, func=func, gobj=self.g_obj)
+    def bind_event(self, action_name, action_switch_kvls: list[tuple[object, int]], func, switch_type="&&"):
+        self.update_controller.bind_u('character_event', action_name=action_name, action_switch_kvls=action_switch_kvls, func=func, gobj=self.g_obj, switch_type=switch_type)
