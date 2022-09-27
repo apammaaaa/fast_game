@@ -1,5 +1,7 @@
 from gameeventloop import EventController, UpdateController
 from collections import defaultdict
+import pygame
+from pygame import sprite
 
 class AnimationController:
 
@@ -71,3 +73,43 @@ class CharacterController:
 
     def bind_event(self, action_name, action_switch_kvls: list[tuple[object, int]], func, switch_type="&&"):
         self.update_controller.bind_u('character_event', action_name=action_name, action_switch_kvls=action_switch_kvls, func=func, gobj=self.g_obj, switch_type=switch_type)
+
+class SpriteRect(pygame.sprite.Sprite):
+
+    def __init__(self, width, height):
+        super().__init__()
+        self.rect = pygame.Rect(0, 0, width, height)
+
+class CollisionController():
+
+    def __init__(self, g_obj, collision_range, collision_size, obj_range, action_controller, event_controller: EventController,
+                 update_controller: UpdateController):
+        '''
+        碰撞检测器
+        :param g_obj: game_object对象
+        :param collision_range: 检测器检测长度
+        :param collision_size: 检测器检测宽度，顺序为上、下、左、右
+        :param obj_range: 距离game_object的范围，顺序为上、下、左、右
+        :param action_controller:
+        :param event_controller:
+        :param update_controller:
+        '''
+        self.event_controller = event_controller
+        self.update_controller = update_controller
+        self.action_controller = action_controller
+        self.g_obj = g_obj
+        self.g_obj.can_move_right = True
+        self.g_obj.can_move_left = True
+        self.g_obj.can_move_top = True
+        self.g_obj.can_move_bottom = True
+        self.r_rect = SpriteRect(collision_range, collision_size[3])
+        self.l_rect = SpriteRect(collision_range, collision_size[2])
+        self.t_rect = SpriteRect(collision_size[0], collision_range)
+        self.d_rect = SpriteRect(collision_size[1], collision_range)
+
+        self.obj_range = obj_range
+
+        self.check_r = False
+        self.check_l = False
+        self.check_t = False
+        self.check_d = False

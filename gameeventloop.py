@@ -1,6 +1,7 @@
 import pygame
 import sys
 from collections import defaultdict
+from pygame.sprite import Group
 
 
 def hotkey_bind(e, event, func):
@@ -167,6 +168,7 @@ class UpdateController:
     def __init__(self):
         self.anime_ls = []
         self.character_ls = []
+        self.collision_group = Group()
 
     def update(self):
         '''
@@ -209,5 +211,9 @@ class UpdateController:
                 'gobj': meta['gobj'],
                 'switch_type': meta['switch_type']
             }
-            print(item)
             self.character_ls.append(item)
+        elif update_type == 'collision':
+            item = {
+                'collision_obj': meta['collision_obj']
+            }
+            self.collision_group.add(item['collision_obj'])

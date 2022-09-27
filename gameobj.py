@@ -2,12 +2,14 @@ import pygame
 from collections import defaultdict
 from g_obj import *
 from gametools import GameFun
+from gameeventloop import UpdateController, EventController
 
-class GameObject(GameFun):
+class GameObject(pygame.sprite.Sprite, GameFun):
 
-    def __init__(self, position, event_controller, update_controller):
+    def __init__(self, position, size, event_controller:EventController, update_controller:UpdateController):
+        super().__init__()
         self.type = 'game_object'
-        self.rect = pygame.Rect(*position, 0, 0)
+        self.rect = pygame.Rect(*position, *size)
         self.object_dict = defaultdict()
         self.count = 0
 
@@ -46,4 +48,6 @@ class GameObject(GameFun):
     def __getitem__(self, object_name) -> Rect:
         return self.object_dict[object_name]
 
+    def add_collision(self):
+        self.update_controller.bind_u('collision', collision_obj = self)
 
