@@ -68,6 +68,7 @@ class Button:
         self.color = color
         self.position_for_obj = position_for_obj
         self.bg_color = bg_color
+
         self.f = pygame.font.Font(font_style, self.font_size)
         self.text = self.f.render(self.txt, True, self.color, self.bg_color)
         self.rect = self.text.get_rect()
@@ -88,3 +89,8 @@ class Button:
 
     def bind(self, func):
         self.event_controller.bind('MOUSEBUTTONDOWN', func, meta={'gobj':self}, hot_key=None)
+
+class Camera:
+
+    def __init__(self):
+        pass

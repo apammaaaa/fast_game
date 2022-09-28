@@ -14,7 +14,7 @@ class GameFun:
         self.action_controller = ActionController(self.event_controller, self.update_controller)
 
     def addCharacterController(self) -> CharacterController:
-        self.character_controller = CharacterController(self, self.action_controller, self.event_controller, self.update_controller)
+        self.character_controller = CharacterController(self.scene, self, self.action_controller, self.event_controller, self.update_controller)
 
     def addCollisionController(self, collision_range=3, collision_size=(30, 30, 30, 30), obj_range=(1, 1, 1, 1)) -> CollisionController:
         self.collision_controller = CollisionController(self, collision_range, collision_size, obj_range, self.action_controller, self.event_controller, self.update_controller)

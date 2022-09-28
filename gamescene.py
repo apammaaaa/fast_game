@@ -3,6 +3,11 @@ from collections import defaultdict
 from gameobj import GameObject
 from gameeventloop import EventController, UpdateController
 
+class NameLs:
+
+    def __init__(self):
+        self.name_ls_d = defaultdict()
+
 
 
 class Scene:
@@ -18,15 +23,14 @@ class Scene:
         self.update_controller = UpdateController()
 
     def create_game_object(self, object_name, position: tuple[int, int] = (0, 0), size: tuple[int, int] = (0, 0)):
-        game_object = GameObject(position, size, self.event_controller, self.update_controller)
+        game_object = GameObject(self, position, size, self.event_controller, self.update_controller)
         self.game_object_dict[object_name] = game_object
 
     def fill(self):
         for event in pygame.event.get():
             self.event_controller.listen(event)
         self.screen.fill(self.bg)
-
-        self.update_controller.update()
+        self.update_controller.update_action()
         for object_name, game_object in self.game_object_dict.items():
             self.load_game_object(game_object)
 

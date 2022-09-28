@@ -169,11 +169,23 @@ class UpdateController:
         self.anime_ls = []
         self.character_ls = []
         self.collision_group = Group()
+        self.delay_ls = []
 
-    def update(self):
+    def update_action(self):
         '''
         更新动作和动画
         '''
+        for delay_event in self.delay_ls:
+            func_obj_ls = delay_event['func_obj_ls']
+            for func_obj in func_obj_ls:
+                if func_obj.is_invalid:
+                    del func_obj_ls[func_obj_ls.index(func_obj)]
+                elif func_obj.is_active:
+                    func_obj.run(delay_event)
+                    break
+                else:
+                    func_obj.is_active = True
+                    break # 防止一次性激活多个任务
         for c in self.character_ls:
             func = c['func']
             action_name = c['action_name']
@@ -209,7 +221,9 @@ class UpdateController:
                 'action_name': meta['action_name'],
                 'action_switch_kvls': meta['action_switch_kvls'],
                 'gobj': meta['gobj'],
-                'switch_type': meta['switch_type']
+                'switch_type': meta['switch_type'],
+                'scene': meta['scene'],
+                'meta': meta['meta']
             }
             self.character_ls.append(item)
         elif update_type == 'collision':
@@ -217,3 +231,8 @@ class UpdateController:
                 'collision_obj': meta['collision_obj']
             }
             self.collision_group.add(item['collision_obj'])
+        elif update_type == 'delay_event':
+            item = {
+                'func_obj_ls': meta['func_obj_ls']
+            }
+            self.delay_ls .append(item)

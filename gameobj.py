@@ -6,12 +6,16 @@ from gameeventloop import UpdateController, EventController
 
 class GameObject(pygame.sprite.Sprite, GameFun):
 
-    def __init__(self, position, size, event_controller:EventController, update_controller:UpdateController):
+    def __init__(self, scene, position, size, event_controller:EventController, update_controller:UpdateController):
         super().__init__()
         self.type = 'game_object'
         self.rect = pygame.Rect(*position, *size)
         self.object_dict = defaultdict()
+        self.delay_dict = defaultdict()
         self.count = 0
+        self.scene = scene
+        self.original_x = position[0]
+        self.original_y = position[1]
 
         self.event_controller = event_controller
         self.update_controller = update_controller
@@ -38,6 +42,9 @@ class GameObject(pygame.sprite.Sprite, GameFun):
                       ):
         self.object_dict[object_name] = Button(text, font_size, color, position, bg_color, self.event_controller,
                                                self.update_controller, hover_color, hover_bg_color,font_style)
+
+    def create_camera(self):
+        self.camera = ''
 
     def delete_object(self, object_name: str):
         self.object_dict.pop(object_name)

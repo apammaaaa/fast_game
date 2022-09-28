@@ -63,16 +63,17 @@ class ActionController:
 
 class CharacterController:
 
-    def __init__(self, g_obj, action_controller, event_controller: EventController,
+    def __init__(self, scene, g_obj, action_controller, event_controller: EventController,
                  update_controller: UpdateController):
         self.event_controller = event_controller
         self.update_controller = update_controller
         self.action_controller = action_controller
         self.g_obj = g_obj
         self.g_obj.character_dict = defaultdict()
+        self.scene = scene
 
-    def bind_event(self, action_name, action_switch_kvls: list[tuple[object, int]], func, switch_type="&&"):
-        self.update_controller.bind_u('character_event', action_name=action_name, action_switch_kvls=action_switch_kvls, func=func, gobj=self.g_obj, switch_type=switch_type)
+    def bind_event(self, action_name, action_switch_kvls: list[tuple[object, int]], func, meta={},switch_type="&&"):
+        self.update_controller.bind_u('character_event', action_name=action_name, action_switch_kvls=action_switch_kvls, func=func, gobj=self.g_obj, switch_type=switch_type, scene=self.scene, meta=meta)
 
 class SpriteRect(pygame.sprite.Sprite):
 
