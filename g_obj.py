@@ -90,7 +90,47 @@ class Button:
     def bind(self, func):
         self.event_controller.bind('MOUSEBUTTONDOWN', func, meta={'gobj':self}, hot_key=None)
 
-class Camera:
+class TextRender:
 
-    def __init__(self):
-        pass
+    def __init__(self, size, position_for_obj, scene, event_controller:EventController, update_controller:UpdateController):
+        self.type = 'text_render'
+        self.position_for_obj = position_for_obj
+        self.textbox_surf = pygame.Surface(size, pygame.SRCALPHA)
+        self.rect = self.textbox_surf.get_rect(topleft=(150, 200))
+        self.border_rect = self.textbox_surf.get_rect(topleft=(0, 0))
+        self.FONT = pygame.font.SysFont('SimSun', 24, 0)
+        self.event_controller = event_controller
+        self.update_controller = update_controller
+        self.scene = scene
+        self.is_show = False
+        self.is_play = True
+        self.cur = 0
+        self.txt_ls = []
+
+    def play(self, txt):
+        rendering = ''
+        self.scene.screen.blit(self.textbox_surf, self.rect)
+        for char in txt:
+            pygame.time.delay(15)
+            rendering = rendering + char
+            rendered_text = self.FONT.render(rendering, 1, 'White')
+            text_rect = rendered_text.get_rect(topleft=(20, 90))
+            self.textbox_surf.fill((0, 0, 20, 100))
+            pygame.draw.rect(self.textbox_surf, "Black", self.border_rect, 6)
+            self.textbox_surf.blit(rendered_text, text_rect)
+            self.scene.screen.blit(self.textbox_surf, self.rect)
+            pygame.display.update()
+        self.is_play = False
+
+    def change_txt(self, txt:str):
+        self.scene.main_txt = txt
+
+    def show(self):
+        self.is_show = True
+
+    def hidden(self):
+        self.is_show = False
+
+    def add_txt_ls(self, txt_ls: list[str]):
+        self.txt_ls = txt_ls
+        self.scene.main_txt = self.txt_ls[self.cur]

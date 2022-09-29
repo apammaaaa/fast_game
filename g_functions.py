@@ -47,16 +47,19 @@ class AnimationController:
         return self.g_obj.anime_dict[key]
 class ActionController:
 
-    def __init__(self, event_controller: EventController, update_controller: UpdateController):
+    def __init__(self, scene, g_obj, event_controller: EventController, update_controller: UpdateController):
         self.event_controller = event_controller
         self.update_controller = update_controller
         self.action_dict = defaultdict()
 
+        self.scene = scene
+        self.g_obj = g_obj
+
     def create_action(self, action_name, action_value, func):
         self.action_dict[action_name] = {'action_value':action_value, 'func': func}
 
-    def bind_action(self, action_name, event_type, hot_key, action_value):
-        self.event_controller.bind(event_type, lambda meta:self.action_dict[action_name]['func'](meta), hot_key, meta={'self':self, 'action_name':action_name, 'action_value': action_value})
+    def bind_action(self, action_name, event_type, hot_key, action_value, meta={}):
+        self.event_controller.bind(event_type, lambda meta:self.action_dict[action_name]['func'](meta), hot_key, meta={'self':self, 'action_name':action_name, 'action_value': action_value, 'meta':meta})
 
     def __getitem__(self, key):
         return self.action_dict[key]

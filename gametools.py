@@ -11,7 +11,7 @@ class GameFun:
 
     def addActionController(self) -> ActionController:
         print('添加动作控制器')
-        self.action_controller = ActionController(self.event_controller, self.update_controller)
+        self.action_controller = ActionController(self.scene, self, self.event_controller, self.update_controller)
 
     def addCharacterController(self) -> CharacterController:
         self.character_controller = CharacterController(self.scene, self, self.action_controller, self.event_controller, self.update_controller)

@@ -1,12 +1,7 @@
 import pygame
 from collections import defaultdict
-from gameobj import GameObject
+from gameobj import GameObject, CameraObject
 from gameeventloop import EventController, UpdateController
-
-class NameLs:
-
-    def __init__(self):
-        self.name_ls_d = defaultdict()
 
 
 
@@ -18,13 +13,21 @@ class Scene:
         self.screen = pygame.display.set_mode(size)
         self.screen_rect = self.screen.get_rect()
         self.game_object_dict = defaultdict()
+        self.camera_object_dict = defaultdict()
 
         self.event_controller = EventController()
         self.update_controller = UpdateController()
 
+        self.main_txt = 'hello world'
+
     def create_game_object(self, object_name, position: tuple[int, int] = (0, 0), size: tuple[int, int] = (0, 0)):
         game_object = GameObject(self, position, size, self.event_controller, self.update_controller)
         self.game_object_dict[object_name] = game_object
+
+    def create_camera_object(self, position=None, size=(0, 0)):
+        if not position:
+            position = self.screen_rect.center
+        self.camera = CameraObject(self, position, size, self.event_controller, self.update_controller)
 
     def fill(self):
         for event in pygame.event.get():
@@ -92,7 +95,11 @@ class Scene:
                 self.screen.blit(gobj.text, gobj.rect)
             elif gobj.type == 'button':
                 self.screen.blit(gobj.text, gobj.rect)
-
+            elif gobj.type == 'text_render':
+                if gobj.is_show:
+                    if gobj.is_play:
+                        gobj.play(self.main_txt)
+                    self.screen.blit(gobj.textbox_surf, gobj.rect)
     def __getitem__(self, game_object_name) -> GameObject:
         return self.game_object_dict[game_object_name]
 
