@@ -132,3 +132,7 @@ class CameraObject(GameFun):
         for vls in self.delay_dict.values():
             self.update_controller.bind_u('delay_event', func_obj_ls=vls)
 
+
+
+
+

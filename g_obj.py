@@ -134,3 +134,8 @@ class TextRender:
     def add_txt_ls(self, txt_ls: list[str]):
         self.txt_ls = txt_ls
         self.scene.main_txt = self.txt_ls[self.cur]
+
+class MusicPlayer:
+
+    def __init__(self):
+        pass
